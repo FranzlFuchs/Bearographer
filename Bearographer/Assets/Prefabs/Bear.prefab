@@ -330,10 +330,10 @@ MonoBehaviour:
   jumpForce: 17
   fallMultiplier: 1.2
   groundCheck: {fileID: 1001735288159433291}
-  groundCheckRadius: 0
+  groundCheckRadius: 0.2
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   extraJumpCount: 1
   jumpEffect: {fileID: 1756864995990567119, guid: 84373b93397a4544b9f154581f7b7cf4,
     type: 3}
