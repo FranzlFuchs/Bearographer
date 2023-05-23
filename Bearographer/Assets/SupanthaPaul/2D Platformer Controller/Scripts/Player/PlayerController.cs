@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace SupanthaPaul
 {
@@ -125,8 +125,8 @@ namespace SupanthaPaul
         void Start()
         {
             // create pools for particles
-           // PoolManager.instance.CreatePool(dashEffect, 2);
-           // PoolManager.instance.CreatePool(jumpEffect, 2);
+            PoolManager.instance.CreatePool(dashEffect, 2);
+            PoolManager.instance.CreatePool(jumpEffect, 2);
 
             // if it's the player, make this instance currently playable
             if (transform.CompareTag("Player")) isCurrentlyPlayable = true;
@@ -153,7 +153,7 @@ namespace SupanthaPaul
 
 
 
-
+                        
                 var position = transform.position;
 
                 // check if on wall

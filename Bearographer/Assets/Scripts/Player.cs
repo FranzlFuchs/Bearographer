@@ -168,17 +168,9 @@ public class Player : MonoBehaviour, IStateMachine
     {
         _currentState.DoStateUpdate();
 
-        UpdateMoveInput();
+        UpdateMoveInput();      
 
-        if (IsMoving())
-        {
-            ChangeState(new Moving_PlayerState(this));
-        }
-
-        if (!IsMoving())
-        {
-            ChangeState(new Idle_Standing_PlayerState(this));
-        }
+       
     }
 
     public void ChangeState(IState nextState)
