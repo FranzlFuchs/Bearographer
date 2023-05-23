@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-namespace SupanthaPaul
+namespace PlayerControllerInputSysten
 {
     public class InputSystem : MonoBehaviour
     {
