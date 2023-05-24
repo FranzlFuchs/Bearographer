@@ -145,7 +145,7 @@ public class Player : MonoBehaviour, IStateMachine
 
         // create pools for particles
         //PoolManager.instance.CreatePool(dashEffect, 2);
-        // PoolManager.instance.CreatePool(jumpEffect, 2);
+        //PoolManager.instance.CreatePool(jumpEffect, 2);
         // if it's the player, make this instance currently playable
         if (transform.CompareTag("Player")) isCurrentlyPlayable = true;
 
@@ -168,9 +168,7 @@ public class Player : MonoBehaviour, IStateMachine
     {
         _currentState.DoStateUpdate();
 
-        UpdateMoveInput();      
-
-       
+        UpdateMoveInput();
     }
 
     public void ChangeState(IState nextState)
@@ -187,6 +185,21 @@ public class Player : MonoBehaviour, IStateMachine
                 .OverlapCircle(groundCheck.position,
                 groundCheckRadius,
                 whatIsGround);
+
+        m_groundedRemember -= Time.deltaTime;
+        
+        if (isGrounded)
+        {
+            m_groundedRemember = m_groundedRememberTime;
+        }
+
+        Debug.Log("isGrounded");
+    }
+    public float GetGroundedRemember()
+    {
+      
+           return m_groundedRemember;
+        
     }
 
     public void CalculateSides()
@@ -225,7 +238,7 @@ public class Player : MonoBehaviour, IStateMachine
     }
 
     public virtual float GetHorizontalAxis()
-    {       
+    {
         return PlayerControllerInputSysten.InputSystem.HorizontalRaw();
     }
 
@@ -244,6 +257,22 @@ public class Player : MonoBehaviour, IStateMachine
         m_anim.SetFloat(Move, 0);
     }
 
+    public void SetAnimJump()
+    {
+        m_anim.SetBool(IsJumping, true);
+    }
+
+    public void StopAnimJump()
+    {
+        m_anim.SetBool(IsJumping, false);
+    }
+
+    public void UpdateAnimJump()
+    {
+        float verticalVelocity = m_rb.velocity.y;
+        m_anim.SetFloat (JumpState, verticalVelocity);
+    }
+
     public void SetAnimMoving()
     {
         m_anim.SetFloat(Move, Mathf.Abs(m_rb.velocity.x));
@@ -257,6 +286,14 @@ public class Player : MonoBehaviour, IStateMachine
         }
 
         return false;
+    }
+
+    public void JumpBody()
+    {
+        m_rb.velocity = new Vector2(m_rb.velocity.x, jumpForce);
+
+        // jumpEffect
+        // PoolManager.instance.ReuseObject(jumpEffect, groundCheck.position, Quaternion.identity);
     }
 
     public void MoveBody()

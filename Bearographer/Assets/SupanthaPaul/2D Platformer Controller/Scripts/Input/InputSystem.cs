@@ -32,6 +32,7 @@ namespace SupanthaPaul
 
         public static bool Jump()
         {
+            Debug.Log("JUMP");
             return Input.GetButtonDown(JumpInput);
         }
 

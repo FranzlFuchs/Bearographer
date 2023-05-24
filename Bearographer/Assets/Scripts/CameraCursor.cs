@@ -64,7 +64,7 @@ public class CameraCursor : MonoBehaviour
         }
     }
 
-    void OnCollisionExit2D(Collision2D coll)
+    void OnTriggerExit2D(Collider2D coll)
     {
         if (coll.gameObject.CompareTag("Bear"))
         {
@@ -73,7 +73,7 @@ public class CameraCursor : MonoBehaviour
         }
     }
 
-    void OnCollisionEnter2D(Collision2D coll)
+    void OnTriggerEnter2D(Collider2D coll)
     {
         if (coll.gameObject.CompareTag("Bear"))
         {
