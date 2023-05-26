@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Jumping_PlayerState : PlayerState
+public class Multiple_Jumping_Playerstate : PlayerState
 {
-    public Jumping_PlayerState(Player player)
+     public Multiple_Jumping_Playerstate(Player player)
         : base(player) { }
 
     public override void DoStateUpdate()
@@ -33,8 +33,8 @@ public class Jumping_PlayerState : PlayerState
 
     public override void EnterState()
     {
-        Debug.Log("JUMPING");
-        _player.JumpBody();
+        Debug.Log("EXTRA JUMPING");
+        _player.ExtraJumpBody();
         _player.SetAnimJump();
     }
 

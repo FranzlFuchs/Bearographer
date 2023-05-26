@@ -20,6 +20,7 @@ public class Idle_Standing_PlayerState : PlayerState
         {
             _player.ChangeState(new Jumping_PlayerState(_player));
         }
+         _player.UpdateAnimJump();
     }
 
     public override void DoStateFixedUpdate()
@@ -29,6 +30,7 @@ public class Idle_Standing_PlayerState : PlayerState
     public override void EnterState()
     {
         Debug.Log("IDLE_Standing");
+        _player.ResetExtraJumps();
         _player.StopBody();
         _player.SetAnimIdle();
     }

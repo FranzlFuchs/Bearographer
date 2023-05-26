@@ -22,6 +22,8 @@ public class Moving_PlayerState : PlayerState
         {
             _player.ChangeState(new Jumping_PlayerState(_player));
         }
+
+        _player.UpdateAnimJump();
     }
 
     public override void DoStateFixedUpdate()

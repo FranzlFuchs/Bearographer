@@ -35,10 +35,7 @@ public class Player : MonoBehaviour, IStateMachine
     [SerializeField]
     private float dashSpeed = 30f;
 
-    [
-        Tooltip(
-            "Amount of time (in seconds) the player will be in the dashing speed")
-    ]
+    [Tooltip("Amount of time (in seconds) the player will be in the dashing speed")]
     [SerializeField]
     private float startDashTime = 0.1f;
 
@@ -134,8 +131,7 @@ public class Player : MonoBehaviour, IStateMachine
 
     private static readonly int IsJumping = Animator.StringToHash("IsJumping");
 
-    private static readonly int
-        WallGrabbing = Animator.StringToHash("WallGrabbing");
+    private static readonly int WallGrabbing = Animator.StringToHash("WallGrabbing");
 
     private static readonly int IsDashing = Animator.StringToHash("IsDashing");
 
@@ -147,7 +143,8 @@ public class Player : MonoBehaviour, IStateMachine
         //PoolManager.instance.CreatePool(dashEffect, 2);
         //PoolManager.instance.CreatePool(jumpEffect, 2);
         // if it's the player, make this instance currently playable
-        if (transform.CompareTag("Player")) isCurrentlyPlayable = true;
+        if (transform.CompareTag("Player"))
+            isCurrentlyPlayable = true;
 
         m_extraJumps = extraJumpCount;
         m_dashTime = startDashTime;
@@ -180,26 +177,19 @@ public class Player : MonoBehaviour, IStateMachine
 
     public void UpdateIsGrounded()
     {
-        isGrounded =
-            Physics2D
-                .OverlapCircle(groundCheck.position,
-                groundCheckRadius,
-                whatIsGround);
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
 
         m_groundedRemember -= Time.deltaTime;
-        
+
         if (isGrounded)
         {
             m_groundedRemember = m_groundedRememberTime;
         }
-
-        Debug.Log("isGrounded");
     }
+
     public float GetGroundedRemember()
     {
-      
-           return m_groundedRemember;
-        
+        return m_groundedRemember;
     }
 
     public void CalculateSides()
@@ -252,6 +242,68 @@ public class Player : MonoBehaviour, IStateMachine
         moveInput = GetHorizontalAxis();
     }
 
+    public bool IsMoving()
+    {
+        if (moveInput != 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public Vector2 GetVelocity()
+    {
+        return m_rb.velocity;
+    }
+
+    public void JumpBody()
+    {
+        m_rb.velocity = new Vector2(m_rb.velocity.x, jumpForce);
+      
+        // jumpEffect
+        // PoolManager.instance.ReuseObject(jumpEffect, groundCheck.position, Quaternion.identity);
+    }
+
+    public void ExtraJumpBody()
+    {
+        m_rb.velocity = new Vector2(m_rb.velocity.x, m_extraJumpForce);
+        m_extraJumps --;
+      
+        // jumpEffect
+        // PoolManager.instance.ReuseObject(jumpEffect, groundCheck.position, Quaternion.identity);
+    }
+
+    public void ResetExtraJumps()
+    {
+        m_extraJumps = extraJumpCount;
+    }
+
+    public bool HasExtraJumps()
+    {
+        return (m_extraJumps > 0) ? true : false;
+    }
+
+    public void MoveBody()
+    {
+        m_rb.velocity = new Vector2(moveInput * speed, m_rb.velocity.y);
+    }
+
+    public void StopBody()
+    {
+        m_rb.velocity = new Vector2(0, m_rb.velocity.y);
+    }
+
+    public void FixedUpdateJumpPhysics()
+    {
+        if (m_rb.velocity.y < 0f)
+        {
+            m_rb.velocity +=
+                Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
+        }
+    }
+
+    //ANIMATION
     public void SetAnimIdle()
     {
         m_anim.SetFloat(Move, 0);
@@ -270,39 +322,11 @@ public class Player : MonoBehaviour, IStateMachine
     public void UpdateAnimJump()
     {
         float verticalVelocity = m_rb.velocity.y;
-        m_anim.SetFloat (JumpState, verticalVelocity);
+        m_anim.SetFloat(JumpState, verticalVelocity);
     }
 
     public void SetAnimMoving()
     {
         m_anim.SetFloat(Move, Mathf.Abs(m_rb.velocity.x));
-    }
-
-    public bool IsMoving()
-    {
-        if (moveInput != 0)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    public void JumpBody()
-    {
-        m_rb.velocity = new Vector2(m_rb.velocity.x, jumpForce);
-
-        // jumpEffect
-        // PoolManager.instance.ReuseObject(jumpEffect, groundCheck.position, Quaternion.identity);
-    }
-
-    public void MoveBody()
-    {
-        m_rb.velocity = new Vector2(moveInput * speed, m_rb.velocity.y);
-    }
-
-    public void StopBody()
-    {
-        m_rb.velocity = new Vector2(0, m_rb.velocity.y);
     }
 }
