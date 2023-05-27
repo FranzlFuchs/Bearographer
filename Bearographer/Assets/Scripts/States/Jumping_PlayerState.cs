@@ -21,12 +21,18 @@ public class Jumping_PlayerState : PlayerState
             _player.ChangeState(new Idle_Standing_PlayerState(_player));
         }
 
+        if (_player.GetIsOnWall())
+        {
+            _player.ChangeState(new Wallgrab_PlayerState(_player));
+        }
+
         _player.MoveBody();
     }
 
     public override void DoStateFixedUpdate()
     {
         _player.UpdateIsGrounded();
+        _player.UpdateOnWall();
         _player.FixedUpdateJumpPhysics();
         _player.UpdateFlip();
     }

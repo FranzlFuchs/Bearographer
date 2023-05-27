@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Multiple_Jumping_Playerstate : PlayerState
 {
-     public Multiple_Jumping_Playerstate(Player player)
+    public Multiple_Jumping_Playerstate(Player player)
         : base(player) { }
 
     public override void DoStateUpdate()
@@ -21,12 +21,19 @@ public class Multiple_Jumping_Playerstate : PlayerState
             _player.ChangeState(new Idle_Standing_PlayerState(_player));
         }
 
+        if (_player.GetIsOnWall())
+        {
+            _player.ChangeState(new Wallgrab_PlayerState(_player));
+        }
+
         _player.MoveBody();
     }
 
     public override void DoStateFixedUpdate()
     {
         _player.UpdateIsGrounded();
+        _player.UpdateOnWall();
+
         _player.FixedUpdateJumpPhysics();
         _player.UpdateFlip();
     }

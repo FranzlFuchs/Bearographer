@@ -187,9 +187,40 @@ public class Player : MonoBehaviour, IStateMachine
         }
     }
 
+    public void UpdateOnWall()
+    {
+        var position = transform.position;
+        m_onWall =
+            Physics2D.OverlapCircle(
+                (Vector2)position + grabRightOffset,
+                grabCheckRadius,
+                whatIsGround
+            )
+            || Physics2D.OverlapCircle(
+                (Vector2)position + grabLeftOffset,
+                grabCheckRadius,
+                whatIsGround
+            );
+        m_onRightWall = Physics2D.OverlapCircle(
+            (Vector2)position + grabRightOffset,
+            grabCheckRadius,
+            whatIsGround
+        );
+        m_onLeftWall = Physics2D.OverlapCircle(
+            (Vector2)position + grabLeftOffset,
+            grabCheckRadius,
+            whatIsGround
+        );
+    }
+
     public float GetGroundedRemember()
     {
         return m_groundedRemember;
+    }
+
+    public bool GetIsOnWall()
+    {
+        return m_onWall;
     }
 
     public void CalculateSides()
@@ -260,16 +291,38 @@ public class Player : MonoBehaviour, IStateMachine
     public void JumpBody()
     {
         m_rb.velocity = new Vector2(m_rb.velocity.x, jumpForce);
-      
+
         // jumpEffect
         // PoolManager.instance.ReuseObject(jumpEffect, groundCheck.position, Quaternion.identity);
+    }
+
+    public void SlideBody()
+    {
+        m_rb.velocity = new Vector2(moveInput * speed, -slideSpeed);
+        // jumpEffect
+        // PoolManager.instance.ReuseObject(jumpEffect, groundCheck.position, Quaternion.identity);
+    }
+
+    public void UpdateWallStickTime()
+    {
+        m_wallStick -= Time.deltaTime;
+    }
+
+    public float GetWallStickTime()
+    {
+        return m_wallStick;
+    }
+
+    public void ResetWallStickTime()
+    {
+        m_wallStick = m_wallStickTime;
     }
 
     public void ExtraJumpBody()
     {
         m_rb.velocity = new Vector2(m_rb.velocity.x, m_extraJumpForce);
-        m_extraJumps --;
-      
+        m_extraJumps--;
+
         // jumpEffect
         // PoolManager.instance.ReuseObject(jumpEffect, groundCheck.position, Quaternion.identity);
     }
@@ -328,5 +381,15 @@ public class Player : MonoBehaviour, IStateMachine
     public void SetAnimMoving()
     {
         m_anim.SetFloat(Move, Mathf.Abs(m_rb.velocity.x));
+    }
+
+    public void SetAnmimWallGrab()
+    {
+        m_anim.SetBool(WallGrabbing, true);
+    }
+
+    public void StopAnmimWallGrab()
+    {
+        m_anim.SetBool(WallGrabbing, false);
     }
 }
