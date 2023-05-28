@@ -11,6 +11,7 @@ TagManager:
   - TreeCrown
   - BearCave
   - House
+  - BehindCrown
   layers:
   - Default
   - TransparentFX
@@ -18,14 +19,14 @@ TagManager:
   - 
   - Water
   - UI
-  - 
   - TreeTrunk
+  - TreeCrown
   - Ground
   - Enemy
   - Player
   - InspectObject
   - PostProcessing
-  - TreeCrown
+  - Background
   - 
   - 
   - 
@@ -48,6 +49,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: New Layer
+  - name: TreeCrown
     uniqueID: 1802038029
+    locked: 0
+  - name: New Layer
+    uniqueID: 1769678271
     locked: 0

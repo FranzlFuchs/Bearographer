@@ -11,9 +11,14 @@ public class Falling_PlayerState : PlayerState
     {
         _player.UpdateAnimJump();
 
-        if (_player.GetJump() && _player.HasExtraJumps())
+        if (_player.GetJump() && _player.HasExtraJumps() && !_player.OnTreeTrunk)
         {
             _player.ChangeState(new Multiple_Jumping_Playerstate(_player));
+        }    
+
+        if (_player.GetJump() && _player.OnTreeTrunk)
+        {
+            _player.ChangeState(new CrawlingTreeTrunk_Idle_PlayerState(_player));
         }    
 
         if (_player.GetIsOnWall())
@@ -34,13 +39,14 @@ public class Falling_PlayerState : PlayerState
     {
         _player.UpdateIsGrounded();
         _player.UpdateOnWall();
+    
         _player.FixedUpdateJumpPhysics();
         _player.UpdateFlip();
     }
 
     public override void EnterState()
     {
-        Debug.Log("JUMPING");        
+        Debug.Log("FALLING");        
         _player.SetAnimJump();
     }
 

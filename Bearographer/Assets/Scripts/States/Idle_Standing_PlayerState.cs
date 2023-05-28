@@ -16,11 +16,17 @@ public class Idle_Standing_PlayerState : PlayerState
             _player.ChangeState(new Moving_PlayerState(_player));
         }
 
-        if (_player.GetJump())
+        if (_player.GetJump() && !_player.OnTreeTrunk)
         {
             _player.ChangeState(new Jumping_PlayerState(_player));
         }
-         _player.UpdateAnimJump();
+
+        if (_player.GetJump() && _player.OnTreeTrunk)
+        {
+            _player.ChangeState(new CrawlingTreeTrunk_Idle_PlayerState(_player));
+        }
+
+        _player.UpdateAnimJump();
     }
 
     public override void DoStateFixedUpdate()
@@ -37,7 +43,6 @@ public class Idle_Standing_PlayerState : PlayerState
 
     public override void ExitState()
     {
-         _player.MoveBody();
-
+        //_player.MoveBody();
     }
 }

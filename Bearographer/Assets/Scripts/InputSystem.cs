@@ -8,6 +8,7 @@ namespace PlayerControllerInputSysten
     {
         // input string caching
         static readonly string HorizontalInput = "Horizontal";
+        static readonly string VerticalInput = "Vertical";
 
         static readonly string HorizontalInputAD = "HorizontalAD";
 
@@ -20,6 +21,11 @@ namespace PlayerControllerInputSysten
         public static float HorizontalRaw()
         {
             return Input.GetAxisRaw(HorizontalInput);
+        }
+
+        public static float VerticalRaw()
+        {
+            return Input.GetAxisRaw(VerticalInput);
         }
 
         public static float HorizontalRawArrows()

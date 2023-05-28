@@ -4,9 +4,13 @@ using UnityEngine;
 
 public class Moving_PlayerState : PlayerState
 {
+
+
+
     public Moving_PlayerState(Player player) :
         base(player)
     {
+
     }
 
     public override void DoStateUpdate()
@@ -17,9 +21,14 @@ public class Moving_PlayerState : PlayerState
         }
 
 
-        if (_player.GetJump()) 
+        if (_player.GetJump() && !_player.OnTreeTrunk) 
         {
             _player.ChangeState(new Jumping_PlayerState(_player));
+        }
+
+        if (_player.GetJump() && _player.OnTreeTrunk) 
+        {
+            _player.ChangeState(new CrawlingTreeTrunk_Idle_PlayerState(_player));
         }
 
         _player.UpdateAnimJump();
@@ -30,6 +39,7 @@ public class Moving_PlayerState : PlayerState
         int playerSide = _player.GetPlayerSide();
         _player.UpdateIsGrounded();
         _player.CalculateSides();
+        _player.UpdateOnWall();
         _player.UpdateFlip();
 
         if(playerSide != _player.GetPlayerSide())

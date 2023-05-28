@@ -8,21 +8,24 @@ public class BearManager : MonoBehaviour
     [SerializeField]
     private List<GameObject> _listBears = new List<GameObject>();
 
-    private List<BearController> _listBearControllers;
+    private List<Bear> _listBearControllers;
 
-    private List<BearController>.Enumerator _activeBearEnumerator;
+    private List<Bear>.Enumerator _activeBearEnumerator;
 
     void Start()
     {
-        _listBearControllers = new List<BearController>();
+        _listBearControllers = new List<Bear>();
 
         foreach (GameObject bear in _listBears)
         {
-            BearController bc = bear.GetComponent<BearController>();
+            Bear bc = bear.GetComponent<Bear>();
             _listBearControllers.Add (bc);
         }
+
         _activeBearEnumerator = _listBearControllers.GetEnumerator();
         _activeBearEnumerator.MoveNext();
+
+      
         _activeBearEnumerator.Current.SetActive();
     }
 

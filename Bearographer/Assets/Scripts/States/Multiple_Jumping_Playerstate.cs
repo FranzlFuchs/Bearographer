@@ -11,9 +11,14 @@ public class Multiple_Jumping_Playerstate : PlayerState
     {
         _player.UpdateAnimJump();
 
-        if (_player.GetJump() && _player.HasExtraJumps())
+        if (_player.GetJump() && _player.HasExtraJumps() && !_player.OnTreeTrunk)
         {
             _player.ChangeState(new Multiple_Jumping_Playerstate(_player));
+        }
+
+        if (_player.GetJump() && _player.OnTreeTrunk)
+        {
+            _player.ChangeState(new CrawlingTreeTrunk_Idle_PlayerState(_player));
         }
 
         if (_player.isGrounded && _player.GetVelocity().y <= 0)

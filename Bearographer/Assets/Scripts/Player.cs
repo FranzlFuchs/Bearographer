@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour, IStateMachine
 {
+    public bool OnTreeTrunk = false;
+
     [SerializeField]
     private float speed;
 
@@ -54,7 +56,9 @@ public class Player : MonoBehaviour, IStateMachine
     public bool isGrounded;
 
     //[HideInInspector]
-    public float moveInput;
+    public float moveInputHor;
+
+    public float moveInputVert;
 
     [HideInInspector]
     public bool canMove = true;
@@ -124,9 +128,11 @@ public class Player : MonoBehaviour, IStateMachine
 
     protected bool _isactive = true;
 
-    private IState _currentState;
+    protected IState _currentState;
 
     public Animator m_anim;
+
+    protected Vector2 _treePos;
 
     private static readonly int Move = Animator.StringToHash("Move");
 
@@ -139,11 +145,9 @@ public class Player : MonoBehaviour, IStateMachine
 
     private static readonly int IsDashing = Animator.StringToHash("IsDashing");
 
-
-    
     void Start()
     {
-        _currentState = new Idle_Standing_PlayerState(this);
+        SetInitialState();
 
         // create pools for particles
         //PoolManager.instance.CreatePool(dashEffect, 2);
@@ -170,7 +174,7 @@ public class Player : MonoBehaviour, IStateMachine
     {
         _currentState.DoStateUpdate();
 
-        UpdateMoveInput();
+        UpdatemoveInput();
     }
 
     public void ChangeState(IState nextState)
@@ -178,6 +182,11 @@ public class Player : MonoBehaviour, IStateMachine
         _currentState.ExitState();
         nextState.EnterState();
         _currentState = nextState;
+    }
+
+    public void SetTreePosition()
+    {
+        SetPlayerPosition(_treePos);
     }
 
     public void UpdateIsGrounded()
@@ -255,11 +264,11 @@ public class Player : MonoBehaviour, IStateMachine
 
     public void UpdateFlip()
     {
-        if (!m_facingRight && moveInput > 0f)
+        if (!m_facingRight && moveInputHor > 0f)
         {
             Flip();
         }
-        else if (m_facingRight && moveInput < 0f)
+        else if (m_facingRight && moveInputHor < 0f)
         {
             Flip();
         }
@@ -270,19 +279,40 @@ public class Player : MonoBehaviour, IStateMachine
         return PlayerControllerInputSysten.InputSystem.HorizontalRaw();
     }
 
+    public virtual float GetVerticalAxis()
+    {
+        return PlayerControllerInputSysten.InputSystem.VerticalRaw();
+    }
+
     public virtual bool GetJump()
     {
         return PlayerControllerInputSysten.InputSystem.Jump();
     }
 
-    public void UpdateMoveInput()
+    public virtual void SetInitialState()
     {
-        moveInput = GetHorizontalAxis();
+        _currentState = new Idle_Standing_PlayerState(this);
+    }
+
+    public void UpdatemoveInput()
+    {
+        moveInputHor = GetHorizontalAxis();
+        moveInputVert = GetVerticalAxis();
     }
 
     public bool IsMoving()
     {
-        if (moveInput != 0)
+        if (moveInputHor != 0)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public bool IsMovingTree()
+    {
+        if (moveInputVert != 0)
         {
             return true;
         }
@@ -305,7 +335,7 @@ public class Player : MonoBehaviour, IStateMachine
 
     public void SlideBody()
     {
-        m_rb.velocity = new Vector2(moveInput * speed, -slideSpeed);
+        m_rb.velocity = new Vector2(moveInputHor * speed, -slideSpeed);
         // jumpEffect
         // PoolManager.instance.ReuseObject(jumpEffect, groundCheck.position, Quaternion.identity);
     }
@@ -366,7 +396,7 @@ public class Player : MonoBehaviour, IStateMachine
         m_rb.velocity =
             Vector2
                 .Lerp(m_rb.velocity,
-                (new Vector2(moveInput * speed, m_rb.velocity.y)),
+                (new Vector2(moveInputHor * speed, m_rb.velocity.y)),
                 1.5f * Time.fixedDeltaTime);
     }
 
@@ -374,6 +404,7 @@ public class Player : MonoBehaviour, IStateMachine
     {
         return m_playerSide;
     }
+
     public void ResetExtraJumps()
     {
         m_extraJumps = extraJumpCount;
@@ -391,12 +422,27 @@ public class Player : MonoBehaviour, IStateMachine
 
     public void MoveBody()
     {
-        m_rb.velocity = new Vector2(moveInput * speed, m_rb.velocity.y);
+        m_rb.velocity = new Vector2(moveInputHor * speed, m_rb.velocity.y);
+    }
+
+    public void MoveBodyDashDown()
+    {
+        m_rb.velocity = new Vector2(0, -dashSpeed);
+    }
+
+    public void MoveBodyTree()
+    {
+        m_rb.velocity = new Vector2(m_rb.velocity.x, moveInputVert * speed);
     }
 
     public void StopBody()
     {
         m_rb.velocity = new Vector2(0, m_rb.velocity.y);
+    }
+
+    public void FreezeBody()
+    {
+        m_rb.velocity = new Vector2(0, 0);
     }
 
     public void FixedUpdateJumpPhysics()
@@ -410,9 +456,6 @@ public class Player : MonoBehaviour, IStateMachine
                 Time.fixedDeltaTime;
         }
     }
-
-
-
 
     //ANIMATION
     public void SetAnimIdle()
@@ -449,5 +492,41 @@ public class Player : MonoBehaviour, IStateMachine
     public void StopAnmimWallGrab()
     {
         m_anim.SetBool(WallGrabbing, false);
+    }
+
+    public virtual void TriggerEnter(Collider2D coll)
+    {
+        Debug.Log("triggier");
+        return;
+    }
+
+    public virtual void TriggerExit(Collider2D coll)
+    {
+        return;
+    }
+
+    public void TurnOffGravity()
+    {
+        m_rb.gravityScale = 0.0f;
+    }
+
+    public void TurnOnGravity()
+    {
+        m_rb.gravityScale = 4.0f;
+    }
+
+    public void SetPlayerPosition(Vector2 pos)
+    {
+        gameObject.transform.position = pos;
+    }
+
+    public void OnTriggerEnter2D(Collider2D coll)
+    {
+        TriggerEnter (coll);
+    }
+
+    public void OnTriggerExit2D(Collider2D coll)
+    {
+        TriggerExit (coll);
     }
 }

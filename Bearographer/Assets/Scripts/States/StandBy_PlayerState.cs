@@ -11,6 +11,7 @@ public class StandBy_PlayerState : PlayerState
 
     public override void DoStateUpdate()
     {
+        _player.UpdateAnimJump();
         return;
     }
 
@@ -21,7 +22,13 @@ public class StandBy_PlayerState : PlayerState
 
     public override void EnterState()
     {
-        return;
+        _player.FreezeBody();
+        if(_player.OnTreeTrunk)
+        {
+            _player.TurnOffGravity();
+        }
+        _player.StopAnimJump();
+        _player.SetAnimIdle();
     }
 
     public override void ExitState()
