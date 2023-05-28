@@ -35,7 +35,10 @@ public class Player : MonoBehaviour, IStateMachine
     [SerializeField]
     private float dashSpeed = 30f;
 
-    [Tooltip("Amount of time (in seconds) the player will be in the dashing speed")]
+    [
+        Tooltip(
+            "Amount of time (in seconds) the player will be in the dashing speed")
+    ]
     [SerializeField]
     private float startDashTime = 0.1f;
 
@@ -131,7 +134,8 @@ public class Player : MonoBehaviour, IStateMachine
 
     private static readonly int IsJumping = Animator.StringToHash("IsJumping");
 
-    private static readonly int WallGrabbing = Animator.StringToHash("WallGrabbing");
+    private static readonly int
+        WallGrabbing = Animator.StringToHash("WallGrabbing");
 
     private static readonly int IsDashing = Animator.StringToHash("IsDashing");
 
@@ -143,8 +147,7 @@ public class Player : MonoBehaviour, IStateMachine
         //PoolManager.instance.CreatePool(dashEffect, 2);
         //PoolManager.instance.CreatePool(jumpEffect, 2);
         // if it's the player, make this instance currently playable
-        if (transform.CompareTag("Player"))
-            isCurrentlyPlayable = true;
+        if (transform.CompareTag("Player")) isCurrentlyPlayable = true;
 
         m_extraJumps = extraJumpCount;
         m_dashTime = startDashTime;
@@ -177,7 +180,11 @@ public class Player : MonoBehaviour, IStateMachine
 
     public void UpdateIsGrounded()
     {
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, whatIsGround);
+        isGrounded =
+            Physics2D
+                .OverlapCircle(groundCheck.position,
+                groundCheckRadius,
+                whatIsGround);
 
         m_groundedRemember -= Time.deltaTime;
 
@@ -191,26 +198,24 @@ public class Player : MonoBehaviour, IStateMachine
     {
         var position = transform.position;
         m_onWall =
-            Physics2D.OverlapCircle(
-                (Vector2)position + grabRightOffset,
+            Physics2D
+                .OverlapCircle((Vector2) position + grabRightOffset,
                 grabCheckRadius,
-                whatIsGround
-            )
-            || Physics2D.OverlapCircle(
-                (Vector2)position + grabLeftOffset,
+                whatIsGround) ||
+            Physics2D
+                .OverlapCircle((Vector2) position + grabLeftOffset,
                 grabCheckRadius,
-                whatIsGround
-            );
-        m_onRightWall = Physics2D.OverlapCircle(
-            (Vector2)position + grabRightOffset,
-            grabCheckRadius,
-            whatIsGround
-        );
-        m_onLeftWall = Physics2D.OverlapCircle(
-            (Vector2)position + grabLeftOffset,
-            grabCheckRadius,
-            whatIsGround
-        );
+                whatIsGround);
+        m_onRightWall =
+            Physics2D
+                .OverlapCircle((Vector2) position + grabRightOffset,
+                grabCheckRadius,
+                whatIsGround);
+        m_onLeftWall =
+            Physics2D
+                .OverlapCircle((Vector2) position + grabLeftOffset,
+                grabCheckRadius,
+                whatIsGround);
     }
 
     public float GetGroundedRemember()
@@ -327,6 +332,42 @@ public class Player : MonoBehaviour, IStateMachine
         // PoolManager.instance.ReuseObject(jumpEffect, groundCheck.position, Quaternion.identity);
     }
 
+    public void WallJumpBody()
+    {
+        CalculateSides();
+        if (m_playerSide == m_onWallSide)
+        {
+            Flip();
+        }
+        m_rb
+            .AddForce(new Vector2(-m_onWallSide * wallJumpForce.x,
+                wallJumpForce.y),
+            ForceMode2D.Impulse);
+    }
+
+    public void WallClimbBody()
+    {
+        CalculateSides();
+        if (m_playerSide == m_onWallSide)
+        {
+            Flip();
+        }
+
+        m_rb
+            .AddForce(new Vector2(-m_onWallSide * wallClimbForce.x,
+                wallClimbForce.y),
+            ForceMode2D.Impulse);
+    }
+
+    public void FixedUpdateWallJumpPhysics()
+    {
+        m_rb.velocity =
+            Vector2
+                .Lerp(m_rb.velocity,
+                (new Vector2(moveInput * speed, m_rb.velocity.y)),
+                1.5f * Time.fixedDeltaTime);
+    }
+
     public void ResetExtraJumps()
     {
         m_extraJumps = extraJumpCount;
@@ -335,6 +376,11 @@ public class Player : MonoBehaviour, IStateMachine
     public bool HasExtraJumps()
     {
         return (m_extraJumps > 0) ? true : false;
+    }
+
+    public int GetWallSide()
+    {
+        return m_onWallSide;
     }
 
     public void MoveBody()
@@ -352,7 +398,10 @@ public class Player : MonoBehaviour, IStateMachine
         if (m_rb.velocity.y < 0f)
         {
             m_rb.velocity +=
-                Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
+                Vector2.up *
+                Physics2D.gravity.y *
+                (fallMultiplier - 1) *
+                Time.fixedDeltaTime;
         }
     }
 
@@ -375,7 +424,7 @@ public class Player : MonoBehaviour, IStateMachine
     public void UpdateAnimJump()
     {
         float verticalVelocity = m_rb.velocity.y;
-        m_anim.SetFloat(JumpState, verticalVelocity);
+        m_anim.SetFloat (JumpState, verticalVelocity);
     }
 
     public void SetAnimMoving()

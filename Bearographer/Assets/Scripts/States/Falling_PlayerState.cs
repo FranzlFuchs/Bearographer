@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Jumping_PlayerState : PlayerState
+public class Falling_PlayerState : PlayerState
 {
-    public Jumping_PlayerState(Player player)
+    public Falling_PlayerState(Player player)
         : base(player) { }
 
     public override void DoStateUpdate()
@@ -14,16 +14,16 @@ public class Jumping_PlayerState : PlayerState
         if (_player.GetJump() && _player.HasExtraJumps())
         {
             _player.ChangeState(new Multiple_Jumping_Playerstate(_player));
-        }
-
-        if (_player.GetVelocity().y <= 0)
-        {
-            _player.ChangeState(new Falling_PlayerState(_player));
-        }
+        }    
 
         if (_player.GetIsOnWall())
         {
             _player.ChangeState(new Wallgrab_PlayerState(_player));
+        }
+
+        if (_player.isGrounded)
+        {
+            _player.ChangeState(new Idle_Standing_PlayerState(_player));
         }
 
         _player.MoveBody();
@@ -40,8 +40,7 @@ public class Jumping_PlayerState : PlayerState
 
     public override void EnterState()
     {
-        Debug.Log("JUMPING");
-        _player.JumpBody();
+        Debug.Log("JUMPING");        
         _player.SetAnimJump();
     }
 

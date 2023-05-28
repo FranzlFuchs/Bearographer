@@ -37,6 +37,7 @@ public class Idle_Standing_PlayerState : PlayerState
 
     public override void ExitState()
     {
-        return;
+         _player.MoveBody();
+
     }
 }

@@ -4,12 +4,23 @@ using UnityEngine;
 
 public class Wallgrab_PlayerState : PlayerState
 {
-    public Wallgrab_PlayerState(Player player)
-        : base(player) { }
+    public Wallgrab_PlayerState(Player player) :
+        base(player)
+    {
+    }
 
     public override void DoStateUpdate()
     {
-        return;
+        if (_player.GetJump() && _player.moveInput != _player.GetWallSide() )
+        {
+            _player.ChangeState(new Walljump_PlayerState(_player));
+        }
+
+
+        if (_player.GetJump() && _player.moveInput == _player.GetWallSide())
+        {
+            _player.ChangeState(new Wallclimb_PlayerState(_player));
+        }
     }
 
     public override void DoStateFixedUpdate()
@@ -18,14 +29,16 @@ public class Wallgrab_PlayerState : PlayerState
 
         _player.UpdateWallStickTime();
         _player.UpdateOnWall();
+        _player.UpdateIsGrounded();
 
         if (_player.GetWallStickTime() <= 0f)
         {
-            _player.ChangeState(new Idle_Standing_PlayerState(_player));
+            _player.ChangeState(new Falling_PlayerState(_player));
         }
-        if (!_player.GetIsOnWall())
+
+        if (!_player.isGrounded && !_player.GetIsOnWall())
         {
-            _player.ChangeState(new Idle_Standing_PlayerState(_player));
+            _player.ChangeState(new Falling_PlayerState(_player));
         }
     }
 

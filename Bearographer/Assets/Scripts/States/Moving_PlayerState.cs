@@ -18,7 +18,6 @@ public class Moving_PlayerState : PlayerState
 
 
         if (_player.GetJump()) 
-        // || _player.GetGroundedRemember() > 0f)
         {
             _player.ChangeState(new Jumping_PlayerState(_player));
         }
@@ -34,7 +33,7 @@ public class Moving_PlayerState : PlayerState
 
     public override void EnterState()
     {
-        Debug.Log("MOVING");
+        Debug.Log("MOVING");        
         _player.MoveBody();
         _player.SetAnimMoving();
     }
