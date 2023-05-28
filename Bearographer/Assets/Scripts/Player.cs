@@ -139,6 +139,8 @@ public class Player : MonoBehaviour, IStateMachine
 
     private static readonly int IsDashing = Animator.StringToHash("IsDashing");
 
+
+    
     void Start()
     {
         _currentState = new Idle_Standing_PlayerState(this);
@@ -368,6 +370,10 @@ public class Player : MonoBehaviour, IStateMachine
                 1.5f * Time.fixedDeltaTime);
     }
 
+    public int GetPlayerSide()
+    {
+        return m_playerSide;
+    }
     public void ResetExtraJumps()
     {
         m_extraJumps = extraJumpCount;
@@ -404,6 +410,9 @@ public class Player : MonoBehaviour, IStateMachine
                 Time.fixedDeltaTime;
         }
     }
+
+
+
 
     //ANIMATION
     public void SetAnimIdle()

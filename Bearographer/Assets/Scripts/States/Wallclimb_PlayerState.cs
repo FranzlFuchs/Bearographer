@@ -19,7 +19,7 @@ public class Wallclimb_PlayerState : PlayerState
 
        
 
-        _player.UpdateAnimJump();
+        
     }
 
     public override void DoStateFixedUpdate()

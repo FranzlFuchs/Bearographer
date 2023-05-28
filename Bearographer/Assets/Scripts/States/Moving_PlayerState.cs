@@ -27,8 +27,16 @@ public class Moving_PlayerState : PlayerState
 
     public override void DoStateFixedUpdate()
     {
+        int playerSide = _player.GetPlayerSide();
         _player.UpdateIsGrounded();
+        _player.CalculateSides();
         _player.UpdateFlip();
+
+        if(playerSide != _player.GetPlayerSide())
+        {
+
+            _player.ChangeState(new Moving_PlayerState(_player));
+        }
     }
 
     public override void EnterState()

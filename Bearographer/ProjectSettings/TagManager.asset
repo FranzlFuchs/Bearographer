@@ -7,6 +7,10 @@ TagManager:
   - Interactible
   - Ground
   - Bear
+  - TreeTrunk
+  - TreeCrown
+  - BearCave
+  - House
   layers:
   - Default
   - TransparentFX
@@ -15,13 +19,13 @@ TagManager:
   - Water
   - UI
   - 
-  - 
+  - TreeTrunk
   - Ground
   - Enemy
   - Player
   - InspectObject
   - PostProcessing
-  - 
+  - TreeCrown
   - 
   - 
   - 

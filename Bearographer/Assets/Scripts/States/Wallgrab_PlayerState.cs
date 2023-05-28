@@ -11,16 +11,32 @@ public class Wallgrab_PlayerState : PlayerState
 
     public override void DoStateUpdate()
     {
-        if (_player.GetJump() && _player.moveInput != _player.GetWallSide() )
-        {
+
+        if (_player.GetJump())
+        {   
+            _player.CalculateSides();
             _player.ChangeState(new Walljump_PlayerState(_player));
+            return;
+        }
+        
+        //EVentuell noch WallClim einbaun, hat noch Fehler
+
+        /*
+        if (_player.GetJump() && _player.moveInput != _player.GetWallSide() )
+        {   
+            _player.CalculateSides();
+            _player.ChangeState(new Walljump_PlayerState(_player));
+            return;
         }
 
 
         if (_player.GetJump() && _player.moveInput == _player.GetWallSide())
         {
+            _player.CalculateSides();
             _player.ChangeState(new Wallclimb_PlayerState(_player));
+            return;
         }
+        */
     }
 
     public override void DoStateFixedUpdate()
